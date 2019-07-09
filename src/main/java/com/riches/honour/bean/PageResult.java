@@ -2,6 +2,12 @@ package com.riches.honour.bean;
 
 import java.util.List;
 
+
+/*
+* @author 吴星辰
+ * @createTime 2019.07.09.40:32
+* */
+
 public class PageResult<T>{
     private Long total;// 总条数
     private Long totalPage;// 总页数
