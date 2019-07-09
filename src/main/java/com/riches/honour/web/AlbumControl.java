@@ -37,7 +37,7 @@ public class AlbumControl {
 
         int flag = albumServer.addAlbum(album);
         if(flag>0){
-            return ResponseEntity.status(200).body("添加成功！");
+            return ResponseEntity.ok("添加成功！");
         }else if(flag == -1){
             return ResponseEntity.status(ResultStatus.RESULT_NAME_EXIST).body("专辑名已存在！");
         }else {
@@ -54,8 +54,42 @@ public class AlbumControl {
     public ResponseEntity<PageResult> selectAlbum(@RequestParam Map<String,Object> map){
         PageParams pageParams = new PageParams(map);
         PageResult pageResult = albumServer.getAlbum(pageParams);
-
+        long currPage = pageParams.getPage();
+        pageResult.setCurrPage(currPage);
+        long totalPage = albumServer.getPageCount(null,pageParams.getLimit());
+        pageResult.setTotalPage(totalPage);
         return ResponseEntity.ok(pageResult);
+    }
+
+    /**
+     * 查询专辑
+     * @param map
+     * @return
+     */
+    @RequestMapping("search")
+    public ResponseEntity<PageResult> searchAlbum(@RequestParam Map<String,Object> map){
+        Album album = new Album();
+
+        PageParams pageParams = new PageParams(map);
+        PageResult pageResult = albumServer.getAlbum(map.get("key").toString(),pageParams);
+        long currPage = pageParams.getPage();
+        pageResult.setCurrPage(currPage);
+        String name = null;
+        if(map.containsKey("key")){
+            name = map.get("key").toString();
+        }
+        long totalPage = albumServer.getPageCount(name,pageParams.getLimit());
+        pageResult.setTotalPage(totalPage);
+        return ResponseEntity.ok(pageResult);
+    }
+
+    @RequestMapping("selectByAlbum")
+    public ResponseEntity<Album> selectByAlbum(@RequestParam int id){
+
+        Album album = albumServer.getAlbumById(id);
+
+        System.out.println("album = " + album);
+        return ResponseEntity.ok(album);
     }
 
     /**
@@ -81,8 +115,10 @@ public class AlbumControl {
      * @return
      */
     @RequestMapping("delete")
-    public ResponseEntity<String> deleteAlbum(@RequestParam Integer[] id){
+    public ResponseEntity<String> deleteAlbum(@RequestBody Integer[] id){
         int flag = albumServer.delete(id);
+
+        System.out.println("flag = " + flag);
         if(flag>0){
             return ResponseEntity.ok("删除成功！");
         }else {

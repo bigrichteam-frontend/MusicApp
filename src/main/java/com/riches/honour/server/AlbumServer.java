@@ -25,11 +25,21 @@ public class AlbumServer {
      *
      * 获取专辑数量
      *
-     * @param album 为null则查询所有的count，否则则查有相应属性的count
+     * @param name 为null则查询所有的count，否则则查有name的count
      * @return
      */
-    public Integer getPageCount(Album album,Integer pageSize){
-        Integer count = albumMapper.selectCount(album);
+    public Integer getPageCount(String name,Integer pageSize){
+        Integer count = 0;
+        if(name!=null){
+            Example example = new Example(Album.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andLike("albumName","%"+name+"%");
+
+            count = albumMapper.selectCountByExample(example);
+        }else {
+            count = albumMapper.selectCount(null);
+        }
+
         Integer pageCount = count % pageSize == 0 ? count / pageSize : count / pageSize + 1;
         return pageCount;
     }
@@ -109,6 +119,29 @@ public class AlbumServer {
         Page<Album> pageInfo = (Page<Album>) albumMapper.selectAll();
         // 返回结果
         return new PageResult<>(pageInfo.getTotal(), pageInfo);
+    }
+
+    /**
+     *
+     * @param pageParams
+     * @return
+     */
+    public PageResult<Album> getAlbum(String name,PageParams pageParams){
+        // 开始分页
+        PageHelper.startPage(pageParams.getPage(), pageParams.getLimit());
+        Example example = new Example(Album.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andLike("albumName","%"+name+"%");
+        //查询
+        Page<Album> pageInfo = (Page<Album>) albumMapper.selectByExample(example);
+        // 返回结果
+        return new PageResult<>(pageInfo.getTotal(), pageInfo);
+    }
+
+    public Album getAlbumById(Integer id){
+        Album album = new Album();
+        album.setId(id);
+        return albumMapper.selectByPrimaryKey(id);
     }
 
     /**
