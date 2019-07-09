@@ -10,10 +10,19 @@ import java.util.List;
 
 public class PageResult<T>{
     private Long total;// 总条数
+    private Long currPage;//当前页
     private Long totalPage;// 总页数
     private List<T> items;// 当前页数据
 
     public PageResult() {
+    }
+
+    public void setCurrPage(Long currPage) {
+        this.currPage = currPage;
+    }
+
+    public Long getCurrPage() {
+        return currPage;
     }
 
     public PageResult(Long total, List<T> items) {
@@ -27,6 +36,12 @@ public class PageResult<T>{
         this.items = items;
     }
 
+    public PageResult(Long total, Long currPage, Long totalPage, List<T> items) {
+        this.total = total;
+        this.currPage = currPage;
+        this.totalPage = totalPage;
+        this.items = items;
+    }
 
     public void setTotal(Long total) {
         this.total = total;
