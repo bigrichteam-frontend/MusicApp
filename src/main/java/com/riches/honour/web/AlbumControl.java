@@ -7,10 +7,12 @@ import com.riches.honour.util.PageResult;
 import com.riches.honour.util.ResultStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.util.StringUtil;
 
 import java.util.Map;
 
@@ -56,7 +58,7 @@ public class AlbumControl {
         PageResult pageResult = albumServer.getAlbum(pageParams);
         long currPage = pageParams.getPage();
         pageResult.setCurrPage(currPage);
-        long totalPage = albumServer.getPageCount(null,pageParams.getLimit());
+        long totalPage = albumServer.getPageCount(null,null,pageParams.getLimit());
         pageResult.setTotalPage(totalPage);
         return ResponseEntity.ok(pageResult);
     }
@@ -68,17 +70,26 @@ public class AlbumControl {
      */
     @RequestMapping("search")
     public ResponseEntity<PageResult> searchAlbum(@RequestParam Map<String,Object> map){
-        Album album = new Album();
 
-        PageParams pageParams = new PageParams(map);
-        PageResult pageResult = albumServer.getAlbum(map.get("key").toString(),pageParams);
-        long currPage = pageParams.getPage();
-        pageResult.setCurrPage(currPage);
         String name = null;
+        Integer sid = null;
         if(map.containsKey("key")){
             name = map.get("key").toString();
         }
-        long totalPage = albumServer.getPageCount(name,pageParams.getLimit());
+        if(map.containsKey("sid")){
+
+            if(!StringUtil.isEmpty(map.get("sid").toString())){
+                sid = Integer.parseInt(map.get("sid").toString());
+            }
+
+        }
+
+        PageParams pageParams = new PageParams(map);
+        PageResult pageResult = albumServer.getAlbum(name,sid,pageParams);
+        long currPage = pageParams.getPage();
+        pageResult.setCurrPage(currPage);
+
+        long totalPage = albumServer.getPageCount(name,sid,pageParams.getLimit());
         pageResult.setTotalPage(totalPage);
         return ResponseEntity.ok(pageResult);
     }
@@ -120,6 +131,7 @@ public class AlbumControl {
 
         System.out.println("flag = " + flag);
         if(flag>0){
+            //开启线程删除歌曲
             return ResponseEntity.ok("删除成功！");
         }else {
             return ResponseEntity.status(ResultStatus.RESULT_OPERATE_ERROR).body("删除失败！");
