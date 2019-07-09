@@ -17,8 +17,8 @@ public class PageParams extends LinkedHashMap<String,Object> {
         this.putAll(params);
 
         //分页参数
-        this.page = (int)params.get("page");
-        this.limit = (int)params.get("limit");
+        this.page = Integer.parseInt((String)params.get("page"));
+        this.limit = Integer.parseInt((String)params.get("limit"));
 
         this.put("start", (page - 1) * limit);
         this.put("page", page);

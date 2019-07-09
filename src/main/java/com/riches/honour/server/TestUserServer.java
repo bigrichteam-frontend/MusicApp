@@ -23,11 +23,11 @@ public class TestUserServer {
         });
         String name="错误";
         if (!CollectionUtils.isEmpty(usr1)){
-            usr1.forEach(item->{
-                System.out.println(item);
-                user2.setUerName(item.getUerName());
-            });
-            name=user2.getUerName();
+//            usr1.forEach(item->{
+//                System.out.println(item);
+//                user2.setUerName(item.getUerName());
+//            });
+//            name=user2.getUerName();
         }
         return name;
     }
