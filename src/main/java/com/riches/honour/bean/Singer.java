@@ -1,17 +1,20 @@
 package com.riches.honour.bean;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import tk.mybatis.mapper.annotation.KeySql;
+
+import javax.persistence.*;
 
 /**
- * @author 王志坚
+ * @author 吴星辰
  * @createTime 2019.07.08.20:32
  */
+
+
+@Table(name = "singer")
 public class Singer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @KeySql(useGeneratedKeys = true)
     private Integer id;
     private String weight;
     private String brth;
@@ -28,6 +31,10 @@ public class Singer {
     private String s_prefix;
     private String yuliu;
     private String yuliu_2;
+
+
+    public Singer() {
+    }
 
     @Override
     public String toString() {
