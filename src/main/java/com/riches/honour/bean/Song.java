@@ -7,6 +7,10 @@ import javax.persistence.Id;
 /**
  * @author 王志坚
  * @createTime 2019.07.08.20:31
+ *
+ * @version 1.1
+ * @author whg
+ * 增加了一个额外字段 isDelete
  */
 public class Song {
     @Id
@@ -22,6 +26,8 @@ public class Song {
     private String yuliu;
     private String yuliu_2;
 
+    private Integer isDeleted;
+
     @Override
     public String toString() {
         return "Song{" +
@@ -35,8 +41,18 @@ public class Song {
                 ", songLongTime='" + songLongTime + '\'' +
                 ", yuliu='" + yuliu + '\'' +
                 ", yuliu_2='" + yuliu_2 + '\'' +
+                ", isDeleted=" + isDeleted +
                 '}';
     }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
 
     public Integer getId() {
         return id;

@@ -7,6 +7,9 @@ import javax.persistence.*;
 /**
  * @author 吴星辰
  * @createTime 2019.07.08.20:32
+ * @version 1.1
+ * @author whg
+ * 增加了一个额外字段 isDeleted
  */
 
 
@@ -32,6 +35,23 @@ public class Singer {
     private String yuliu;
     private String yuliu_2;
 
+    private Integer isDeleted;
+
+    public String getcName() {
+        return cName;
+    }
+
+    public void setcName(String cName) {
+        this.cName = cName;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 
     public Singer() {
     }
@@ -48,13 +68,14 @@ public class Singer {
                 ", language='" + language + '\'' +
                 ", headUrl='" + headUrl + '\'' +
                 ", xingZuo='" + xingZuo + '\'' +
-                ", CNname='" + cName + '\'' +
+                ", cName='" + cName + '\'' +
                 ", name='" + name + '\'' +
                 ", info='" + info + '\'' +
                 ", s_type='" + s_type + '\'' +
                 ", s_prefix='" + s_prefix + '\'' +
                 ", yuliu='" + yuliu + '\'' +
                 ", yuliu_2='" + yuliu_2 + '\'' +
+                ", isDeleted=" + isDeleted +
                 '}';
     }
 

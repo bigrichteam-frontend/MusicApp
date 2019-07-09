@@ -18,4 +18,6 @@ public class TestUser {
 
     private String password;
 
+    private Integer isDeleted;
+
 }

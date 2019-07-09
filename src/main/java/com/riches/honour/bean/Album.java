@@ -7,6 +7,11 @@ import javax.persistence.Id;
 /**
  * @author 王志坚
  * @createTime 2019.07.08.20:31
+ *
+ *
+ * @version 1.1
+ * @author whg
+ * 增加了一个额外字段 isDeleted
  */
 public class Album {
     @Id
@@ -20,6 +25,24 @@ public class Album {
     private String albumName;
     private String yuliu;
     private String yuliu_2;
+
+    private int isDeleted;
+
+    public String getAlbumInfo() {
+        return albumInfo;
+    }
+
+    public void setAlbumInfo(String albumInfo) {
+        this.albumInfo = albumInfo;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDelete(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 
     @Override
     public String toString() {

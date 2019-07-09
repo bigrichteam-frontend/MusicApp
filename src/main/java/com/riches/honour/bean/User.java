@@ -7,6 +7,11 @@ import javax.persistence.Id;
 /**
  * @author 王志坚
  * @createTime 2019.07.08.20:31
+ *
+ * @version 1.1
+ * @author whg
+ * 增加了一个额外字段 isDeleted
+ *
  */
 public class User {
 
@@ -20,6 +25,9 @@ public class User {
     private String headUrl;
     private String info;
 
+    private Integer isDeleted;
+
+
     @Override
     public String toString() {
         return "User{" +
@@ -30,7 +38,16 @@ public class User {
                 ", mail='" + mail + '\'' +
                 ", headUrl='" + headUrl + '\'' +
                 ", info='" + info + '\'' +
+                ", isDeleted=" + isDeleted +
                 '}';
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public Integer getId() {

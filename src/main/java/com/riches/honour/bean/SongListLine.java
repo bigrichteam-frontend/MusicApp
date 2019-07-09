@@ -5,12 +5,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
+ * 歌曲歌单联系类
  * @author 王志坚
  * @createTime 2019.07.08.20:31
  *
+ * @version 1.1
+ * @author whg
+ * 增加了一个额外字段 isDelete
  *
- *
- * 歌曲歌单联系类
  */
 public class SongListLine {
     @Id
@@ -19,13 +21,24 @@ public class SongListLine {
     private Integer sid;
     private Integer sLId;
 
+    private Integer isDeleted;
+
     @Override
     public String toString() {
-        return "SongSingerLine{" +
+        return "SongListLine{" +
                 "id=" + id +
                 ", sid=" + sid +
                 ", sLId=" + sLId +
+                ", isDeleted=" + isDeleted +
                 '}';
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public Integer getId() {

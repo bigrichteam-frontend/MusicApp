@@ -8,7 +8,9 @@ import javax.persistence.Id;
  * @author 王志坚
  * @createTime 2019.07.08.20:31
  *
- *
+ * @version 1.1
+ * @author whg
+ * 增加了一个额外字段 isDelete
  *
  * 歌单
  */
@@ -25,6 +27,8 @@ public class SongList {
 
     private String info;
 
+    private Integer isDeleted;
+
     @Override
     public String toString() {
         return "SongList{" +
@@ -33,7 +37,16 @@ public class SongList {
                 ", status=" + status +
                 ", name='" + name + '\'' +
                 ", info='" + info + '\'' +
+                ", isDeleted=" + isDeleted +
                 '}';
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public Integer getId() {

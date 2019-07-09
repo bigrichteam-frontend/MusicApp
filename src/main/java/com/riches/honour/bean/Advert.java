@@ -8,6 +8,10 @@ import java.util.Date;
 /**
  * @author 王志坚
  * @createTime 2019.07.08.20:29
+ *
+ * @version 1.1
+ * @author whg
+ * 增加了一个额外字段 isDelete
  */
 
 
@@ -21,6 +25,9 @@ public class Advert {
     private Date endTime;
     private Integer status;
     private String name;
+
+    private int isDelete;
+
 
     @Override
     public String toString() {
@@ -80,5 +87,13 @@ public class Advert {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
     }
 }
