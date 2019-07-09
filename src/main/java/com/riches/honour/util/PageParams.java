@@ -9,16 +9,16 @@ import java.util.Map;
  */
 public class PageParams extends LinkedHashMap<String,Object> {
     //当前页码
-    private Long page;
+    private int page;
     //每页条数
-    private Long limit;
+    private int limit;
 
     public PageParams(Map<String, Object> params){
         this.putAll(params);
 
         //分页参数
-        this.page = (Long)params.get("page");
-        this.limit = (Long)params.get("limit");
+        this.page = (int)params.get("page");
+        this.limit = (int)params.get("limit");
 
         this.put("start", (page - 1) * limit);
         this.put("page", page);
@@ -28,19 +28,19 @@ public class PageParams extends LinkedHashMap<String,Object> {
     public PageParams() {
     }
 
-    public Long getPage() {
+    public int getPage() {
         return page;
     }
 
-    public void setPage(Long page) {
+    public void setPage(int page) {
         this.page = page;
     }
 
-    public Long getLimit() {
+    public int getLimit() {
         return limit;
     }
 
-    public void setLimit(Long limit) {
+    public void setLimit(int limit) {
         this.limit = limit;
     }
 }
