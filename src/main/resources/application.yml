@@ -4,6 +4,6 @@ server:
     path:  "/"
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ssm?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/music?serverTimezone=UTC
     username: root
-    password: a6161422
+    password: 110412
