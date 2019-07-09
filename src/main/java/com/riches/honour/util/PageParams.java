@@ -7,18 +7,18 @@ import java.util.Map;
  * @author 王志坚
  * @createTime 2019.07.09.10:19
  */
-public class PageParams extends LinkedHashMap<String,Long> {
+public class PageParams extends LinkedHashMap<String,Object> {
     //当前页码
     private Long page;
     //每页条数
     private Long limit;
 
-    public PageParams(Map<String, Long> params){
+    public PageParams(Map<String, Object> params){
         this.putAll(params);
 
         //分页参数
-        this.page = params.get("page");
-        this.limit = params.get("limit");
+        this.page = (Long)params.get("page");
+        this.limit = (Long)params.get("limit");
 
         this.put("start", (page - 1) * limit);
         this.put("page", page);
