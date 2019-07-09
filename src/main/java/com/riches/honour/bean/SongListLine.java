@@ -7,6 +7,10 @@ import javax.persistence.Id;
 /**
  * @author 王志坚
  * @createTime 2019.07.08.20:31
+ *
+ *
+ *
+ * 歌曲歌单联系类
  */
 public class SongListLine {
     @Id

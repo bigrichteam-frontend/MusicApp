@@ -1,4 +1,4 @@
-package com.riches.honour.bean;
+package com.riches.honour.util;
 
 import java.util.List;
 

@@ -7,14 +7,22 @@ import javax.persistence.Id;
 /**
  * @author 王志坚
  * @createTime 2019.07.08.20:31
+ *
+ *
+ *
+ * 歌单
  */
 public class SongList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private Integer uid;
+
     private Integer status;
+
     private String name;
+
     private String info;
 
     @Override
