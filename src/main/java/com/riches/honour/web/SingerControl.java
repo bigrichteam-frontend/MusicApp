@@ -28,6 +28,8 @@ public class SingerControl {
     @Autowired
     SingerServer singerServer;
 
+
+    //后台开始
     @RequestMapping("page")
  public ResponseEntity<PageResult<Singer>> getPageList(@RequestParam Map<String,String> map) {
 
@@ -55,8 +57,27 @@ public class SingerControl {
 
         return singerServer.updateSinger(map);
     }
+    //后台end
 
 
+    //前台部分
+    @RequestMapping("qiantaiPage")
+    public ResponseEntity<PageResult<Singer>> getqianTianPageList(@RequestBody Map<String,String> map) {
+
+        return singerServer.getQianTaiPageList( map);
+    }
+
+
+    @RequestMapping("getSixSinger")
+    public ResponseEntity<List<Singer>>  getSixSinger(){
+        return singerServer.getSixSinger();
+    }
+
+    @RequestMapping("getOneSinger")
+    public ResponseEntity<Singer> getOneSinger(@RequestBody Map<String,Integer> map){
+
+        return singerServer.getOneSinger(map);
+    }
 
 
 }

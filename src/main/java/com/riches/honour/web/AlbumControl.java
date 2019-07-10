@@ -1,5 +1,6 @@
 package com.riches.honour.web;
 
+import com.riches.honour.advice.MusicException;
 import com.riches.honour.bean.Album;
 import com.riches.honour.server.AlbumServer;
 import com.riches.honour.util.PageParams;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.util.StringUtil;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -53,12 +55,16 @@ public class AlbumControl {
      * @return
      */
     @RequestMapping("select")
-    public ResponseEntity<PageResult> selectAlbum(@RequestParam Map<String,Object> map){
-        PageParams pageParams = new PageParams(map);
-        PageResult pageResult = albumServer.getAlbum(pageParams);
-        long currPage = pageParams.getPage();
+    public ResponseEntity<PageResult> selectAlbum(@RequestParam Map<String,String> map){
+        if(!map.containsKey("page") || !map.containsKey("limit")){
+            throw  new MusicException(ResultStatus.RESULT_PARAMS_ERROR,"参数错误");
+        }
+
+        PageResult pageResult = albumServer.getAlbum(map);
+
+        long currPage = Integer.parseInt(map.get("page"));
         pageResult.setCurrPage(currPage);
-        long totalPage = albumServer.getPageCount(null,null,pageParams.getLimit());
+        long totalPage = albumServer.getPageCount(null,null,Integer.parseInt(map.get("limit")) );
         pageResult.setTotalPage(totalPage);
         return ResponseEntity.ok(pageResult);
     }
@@ -69,29 +75,35 @@ public class AlbumControl {
      * @return
      */
     @RequestMapping("search")
-    public ResponseEntity<PageResult> searchAlbum(@RequestParam Map<String,Object> map){
-
+    public ResponseEntity<PageResult<Album>> searchAlbum(@RequestParam Map<String,String> map){
+        if(!map.containsKey("page") || !map.containsKey("limit")){
+            throw  new MusicException(ResultStatus.RESULT_PARAMS_ERROR,"参数错误");
+        }
         String name = null;
         Integer sid = null;
         if(map.containsKey("key")){
-            name = map.get("key").toString();
+            name = map.get("key");
         }
         if(map.containsKey("sid")){
 
-            if(!StringUtil.isEmpty(map.get("sid").toString())){
-                sid = Integer.parseInt(map.get("sid").toString());
+            if(!StringUtil.isEmpty(map.get("sid"))){
+                sid = Integer.parseInt(map.get("sid"));
             }
 
         }
 
-        PageParams pageParams = new PageParams(map);
-        PageResult pageResult = albumServer.getAlbum(name,sid,pageParams);
-        long currPage = pageParams.getPage();
+        //PageParams pageParams = new PageParams(map);
+        PageResult<Album> pageResult = albumServer.getAlbum(name,sid,map);
+        long currPage = Integer.parseInt(map.get("page"));
         pageResult.setCurrPage(currPage);
 
-        long totalPage = albumServer.getPageCount(name,sid,pageParams.getLimit());
+        long totalPage = albumServer.getPageCount(name,sid,Integer.parseInt(map.get("limit")) );
         pageResult.setTotalPage(totalPage);
         return ResponseEntity.ok(pageResult);
+    }
+    @RequestMapping("search_1")
+    public ResponseEntity<PageResult<Album>> searchAlbum_1(@RequestBody Map<String,String> map){
+        return searchAlbum(map);
     }
 
     @RequestMapping("selectByAlbum")
@@ -101,6 +113,10 @@ public class AlbumControl {
 
         System.out.println("album = " + album);
         return ResponseEntity.ok(album);
+    }
+    @RequestMapping("selectByAlbum_1")
+    public ResponseEntity<Album> selectByAlbum_1(@RequestBody int id){
+        return selectByAlbum(id);
     }
 
     /**
