@@ -16,13 +16,13 @@ public class TestUserControl {
     TestUserServer testUserServer;
 
 
-    @PostMapping("login")
-    public ResponseEntity<String> loginTest(@RequestBody TestUser user)
-    {
-        //testServer.loginTest(user)
-        System.out.println(user);
-        return ResponseEntity.ok(testUserServer.loginTest(user));
-    }
+//    @PostMapping("login")
+//    public ResponseEntity<String> loginTest(@RequestBody TestUser user)
+//    {
+//        //testServer.loginTest(user)
+//        System.out.println(user);
+////        return ResponseEntity.ok(testUserServer.loginTest(user));
+//    }
 
 
 
