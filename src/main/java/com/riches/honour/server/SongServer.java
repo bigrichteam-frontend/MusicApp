@@ -74,6 +74,12 @@ public class SongServer {
 
     //PageHeper 没有参数（初始化），还有，传参应该还有page和limit＋name，应用map接收
 
+    /**
+     * 通过名字模糊查询歌曲
+     * @param name
+     * @param pageParams
+     * @return
+     */
     public PageResult<Song> selectSongByName(String name,PageParams pageParams){
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit());
         Example example=new Example(Song.class);
@@ -104,6 +110,11 @@ public class SongServer {
         return songs.get(0);
     }
 
+    /**
+     * 通过id修改歌曲信息
+     * @param song
+     * @return
+     */
     public int updateSongById(Song song) {
         int id = song.getId();
         Song song1 = selectSongById(id);
