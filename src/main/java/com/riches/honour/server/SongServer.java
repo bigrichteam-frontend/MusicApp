@@ -82,6 +82,7 @@ public class SongServer {
         //System.out.println("name = " + name);
         Page<Song> pageInfo = (Page<Song>) songMapper.selectByExample(example);
         PageResult<Song> songPageResult = new PageResult<>(pageInfo.getTotal(), pageInfo);
+        songPageResult.setCurrPage((long) pageParams.getPage());
         //System.out.println("getTotal:" + pageInfo.getTotal());
         songPageResult.setTotalPage(pageInfo.getTotal()% pageParams.getLimit()>0
                                                         ? pageInfo.getTotal()/pageParams.getLimit()+1
