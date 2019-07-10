@@ -14,9 +14,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.security.Key;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 /*
@@ -34,7 +39,7 @@ public class SingerServer {
              Integer  limit=Integer.valueOf(map.get("limit"));
 
              String keyWord=map.get("searchkey");
-        System.out.println(keyWord);
+
         //开始分页
         PageHelper.startPage(page,limit);
         Example example=new Example(Singer.class);
@@ -87,5 +92,57 @@ public class SingerServer {
         }
 
         return ResponseEntity.ok("添加成功");
+    }
+
+    public ResponseEntity<PageResult<Singer>> getQianTaiPageList(Map<String, String> map) {
+
+        Integer page= Integer.valueOf(map.get("page"));
+        String keyWord=map.get("key");
+        PageHelper.startPage(page,10);
+
+        Example example=new Example(Singer.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isDeleted",1);
+        if (!StringUtils.isBlank(keyWord)){    //**组合错误
+            (criteria.andLike("cName","%"+keyWord+"%").orLike("name","%"+keyWord+"%")).andEqualTo("isDeleted",1);
+
+        }
+        Page<Singer> pageInfo= (Page<Singer>) singerMapper.selectByExample(example);
+        if (pageInfo==null){
+            throw  new MusicException(ResultStatus.RESULT_EXCEPTION_ERROR,"分页结果出错");
+        }
+
+        Long total=Long.valueOf(pageInfo.getTotal());
+        Long pages=Long.valueOf(pageInfo.getPages());
+
+        return ResponseEntity.ok(new PageResult<Singer>(total,Long.valueOf(map.get("page")),pages,pageInfo));
+
+
+    }
+
+    public ResponseEntity<List<Singer>> getSixSinger() {
+        int start=(int)((1+Math.random()*(150-1+1)))/6+1;
+
+        PageHelper.startPage(start,6);
+        Example example=new Example(Singer.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isDeleted",1);
+        Page<Singer> pageInfo= (Page<Singer>) singerMapper.selectByExample(example);
+           if (CollectionUtils.isEmpty(pageInfo)){
+               throw new MusicException(404,"查询失败");
+           }
+
+        return ResponseEntity.ok(pageInfo);
+    }
+
+    public ResponseEntity<Singer> getOneSinger(Map<String, Integer> map) {
+            Integer id=map.get("sid");
+              Singer singer= singerMapper.selectByPrimaryKey(id);
+              if (singer==null){
+                  throw new MusicException(404,"查询失败");
+              }
+
+
+        return ResponseEntity.ok(singer);
     }
 }

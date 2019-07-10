@@ -25,8 +25,10 @@ public class Singer {
     private String country;
     private String sex;
     private String language;
+    @Column(name = "head_url")
     private String headUrl;
     private String xingZuo;
+    @Column(name ="c_name" )
     private String cName;
     private String name;
     private String info;
