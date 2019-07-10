@@ -77,7 +77,7 @@ public class SongController {
     }
 
     @RequestMapping("selectByName")
-    public ResponseEntity<PageResult> selectByName(@RequestParam("name") String name,@RequestParam("page") int page,@RequestParam("limit") int limit){
+    public ResponseEntity<PageResult> selectByName(@RequestParam("name") String name,@RequestParam(value = "page",required=false,defaultValue = "1") int page,@RequestParam(value = "limit",required=false,defaultValue = "10") int limit){
 
         if(name != null && (Integer)page != null && (Integer)limit != null){
             PageParams pageParams = new PageParams();
