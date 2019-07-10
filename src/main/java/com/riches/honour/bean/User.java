@@ -1,5 +1,6 @@
 package com.riches.honour.bean;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,7 +25,7 @@ public class User {
     private String mail;
     private String headUrl;
     private String info;
-
+    @Column(name = "is_delete")
     private Integer isDeleted;
 
 
