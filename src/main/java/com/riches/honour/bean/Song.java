@@ -1,5 +1,6 @@
 package com.riches.honour.bean;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,6 +27,7 @@ public class Song {
     private String yuliu;
     private String yuliu_2;
 
+    @Column(name = "is_delete")
     private Integer isDeleted;
 
     @Override
