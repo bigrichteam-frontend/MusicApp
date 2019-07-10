@@ -1,9 +1,6 @@
 package com.riches.honour.bean;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * @author 王志坚
@@ -26,6 +23,17 @@ public class Song {
     private String songLongTime;
     private String yuliu;
     private String yuliu_2;
+
+    @Transient
+    private  String songUrl;
+
+    public String getSongUrl() {
+        return songUrl;
+    }
+
+    public void setSongUrl(String songUrl) {
+        this.songUrl = songUrl;
+    }
 
     @Column(name = "is_delete")
     private Integer isDeleted;
