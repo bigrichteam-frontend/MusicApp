@@ -3,7 +3,9 @@ package com.riches.honour.server;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.riches.honour.bean.Album;
+import com.riches.honour.bean.Song;
 import com.riches.honour.mapper.AlbumMapper;
+import com.riches.honour.mapper.SongMapper;
 import com.riches.honour.util.PageParams;
 import com.riches.honour.util.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 王志坚
@@ -20,6 +23,8 @@ import java.util.List;
 public class AlbumServer {
     @Autowired
     AlbumMapper albumMapper;
+    @Autowired
+    SongMapper songMapper;
 
     /**
      *
@@ -33,12 +38,16 @@ public class AlbumServer {
         if(name != null || sid != null){
             Example example = new Example(Album.class);
             Example.Criteria criteria = example.createCriteria();
+
+
+
             if(name !=null){
                 criteria.andLike("albumName","%"+name+"%");
             }
             if(sid != null){
                 criteria.andEqualTo("sid",sid);
             }
+            criteria.andEqualTo("isDeleted",1);
 
             count = albumMapper.selectCountByExample(example);
         }else {
@@ -79,6 +88,17 @@ public class AlbumServer {
 
         Integer flag = albumMapper.updateByPrimaryKeySelective(album);
 
+        if(flag>0){
+            Song song = new Song();
+            song.setAid(id);
+            List<Song> songList = songMapper.select(song);
+
+            for(Song song1 : songList){
+                song1.setIsDeleted(0);
+                songMapper.updateByPrimaryKeySelective(song1);
+            }
+
+        }
         return flag;
     }
 
@@ -116,24 +136,28 @@ public class AlbumServer {
      * 根据album的非空属性值查询album
      * @return  符合条件的
      */
-    public PageResult<Album> getAlbum( PageParams pageParams){
+    public PageResult<Album> getAlbum(Map<String,String> map){
         // 开始分页
-        PageHelper.startPage(pageParams.getPage(), pageParams.getLimit());
+        PageHelper.startPage(Integer.parseInt(map.get("page")), Integer.parseInt(map.get("limit")));
 
+        Example example = new Example(Album.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isDeleted",1);
         //查询
-        Page<Album> pageInfo = (Page<Album>) albumMapper.selectAll();
+        Page<Album> pageInfo = (Page<Album>) albumMapper.selectByExample(example);
         // 返回结果
         return new PageResult<>(pageInfo.getTotal(), pageInfo);
     }
 
     /**
      *
-     * @param pageParams
+     * @param
      * @return
      */
-    public PageResult<Album> getAlbum(String name,Integer sid,PageParams pageParams){
+    public PageResult<Album> getAlbum(String name,Integer sid,Map<String,String> map){
+
         // 开始分页
-        PageHelper.startPage(pageParams.getPage(), pageParams.getLimit());
+        PageHelper.startPage(Integer.parseInt(map.get("page")), Integer.parseInt(map.get("limit")));
         Example example = new Example(Album.class);
         Example.Criteria criteria = example.createCriteria();
         if(name != null){
@@ -142,6 +166,7 @@ public class AlbumServer {
         if(sid != null){
             criteria.andEqualTo("sid",sid);
         }
+        criteria.andEqualTo("isDeleted",1);
         //查询
         Page<Album> pageInfo = (Page<Album>) albumMapper.selectByExample(example);
         // 返回结果
