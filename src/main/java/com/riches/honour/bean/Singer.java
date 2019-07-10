@@ -35,6 +35,7 @@ public class Singer {
     private String yuliu;
     private String yuliu_2;
 
+    @Column(name = "is_delete")
     private Integer isDeleted;
 
     public String getcName() {
