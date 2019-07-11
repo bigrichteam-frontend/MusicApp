@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author whg
@@ -36,6 +37,22 @@ public class SongServer {
         int number = songMapper.selectCount(null);
         return number%size > 0 ? number/size+1 :number/size;
     }
+
+    /**
+     *
+     * @param size
+     * @return
+     */
+    public int getPageNumber(int size,int aid){
+        Example example = new Example(Song.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("aid",aid).andEqualTo("isDeleted",1);
+
+        int number = songMapper.selectCountByExample(example);
+        return number%size > 0 ? number/size+1 :number/size;
+    }
+
+
 
     /**
      *  查询歌曲信息
@@ -124,5 +141,57 @@ public class SongServer {
         example.createCriteria().andEqualTo("id",id);
         int flag = songMapper.updateByPrimaryKey(song1);
         return flag;
+    }
+
+    public PageResult<Song> getSongRankListByPage(Map<String,String> map) {
+
+        PageHelper.startPage(Integer.parseInt(map.get("page")), Integer.parseInt(map.get("limit")));
+
+        String key = map.get("key");
+
+        Example example=new Example(Song.class);
+        Example.Criteria criteria = example.createCriteria();
+        example.setOrderByClause(key+" ASC");
+        criteria.andEqualTo("isDeleted",1);
+
+        //System.out.println("name = " + name);
+        Page<Song> pageInfo = (Page<Song>) songMapper.selectByExample(example);
+
+        PageResult<Song> songPageResult = new PageResult<>(pageInfo.getTotal(), pageInfo);
+
+        long pagecount = getPageNumber(Integer.parseInt(map.get("limit")));
+        songPageResult.setTotalPage(pagecount);
+        long total = songMapper.selectCount(null);
+        songPageResult.setTotal(total);
+        long currPage = Integer.parseInt(map.get("page"));
+        songPageResult.setCurrPage(currPage);
+
+        return songPageResult;
+    }
+
+    public PageResult<Song> getSongListByPage(Map<String, String> map) {
+
+        PageHelper.startPage(Integer.parseInt(map.get("page")), Integer.parseInt(map.get("limit")));
+
+        int aid = Integer.parseInt(map.get("aid"));
+
+        Example example=new Example(Song.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        criteria.andEqualTo("isDeleted",1).andEqualTo("aid",aid);
+
+        //System.out.println("name = " + name);
+        Page<Song> pageInfo = (Page<Song>) songMapper.selectByExample(example);
+
+        PageResult<Song> songPageResult = new PageResult<>(pageInfo.getTotal(), pageInfo);
+
+        long pagecount = getPageNumber(Integer.parseInt(map.get("limit")),Integer.parseInt(map.get("aid")));
+        songPageResult.setTotalPage(pagecount);
+        long total = songMapper.selectCountByExample(example);
+        songPageResult.setTotal(total);
+        long currPage = Integer.parseInt(map.get("page"));
+        songPageResult.setCurrPage(currPage);
+
+        return songPageResult;
     }
 }

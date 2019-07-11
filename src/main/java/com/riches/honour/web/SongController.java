@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * @author whg
@@ -53,6 +58,21 @@ public class SongController {
         }
     }
 
+    @RequestMapping("selectSongByAid")
+    public ResponseEntity<PageResult<Song>> selectSongByAid(@RequestBody Map<String,String> map){
+
+        if(!map.containsKey("aid") || !map.containsKey("limit") || !map.containsKey("page")){
+            MusicException musicException = new MusicException();
+            musicException.setCode(400);
+            musicException.setMsg("参数错误");
+            throw musicException;
+        }
+
+        PageResult<Song> pageResult = songServer.getSongListByPage(map);
+
+        return ResponseEntity.status(200).body(pageResult);
+    }
+
 
     @RequestMapping("delete")
     public ResponseEntity<String>  deleteSong(@RequestParam("id") int id){
@@ -75,6 +95,53 @@ public class SongController {
             throw musicException;
         }
     }
+
+    @RequestMapping("getRankList")
+    public ResponseEntity<PageResult> getRankList(){
+        Map<String,String> map = new HashMap<>();
+        map.put("limit","9");
+        map.put("page","1");
+
+        map.put("key","hot");
+        PageResult hotResult = doRankList(map);
+
+        map.put("key","song_long_time");
+        PageResult resentResult = doRankList(map);
+
+        map.put("key","song_long_time,hot");
+        PageResult resentHotResult = doRankList(map);
+
+        List<PageResult> list = new ArrayList<>();
+        list.add(hotResult);
+        list.add(resentResult);
+        list.add(resentHotResult);
+
+
+        PageResult pageResult = new PageResult();
+        pageResult.setItems(list);
+
+        return ResponseEntity.status(200).body(pageResult);
+    }
+    @RequestMapping("getRankListByType")
+    public ResponseEntity<PageResult> getRankList(@RequestBody Map<String,String> map){
+
+        return ResponseEntity.status(200).body(doRankList(map));
+
+    }
+
+    private PageResult doRankList(Map<String,String> map){
+        if(!map.containsKey("key") || !map.containsKey("limit") || !map.containsKey("page")){
+            MusicException musicException = new MusicException();
+            musicException.setCode(400);
+            musicException.setMsg("参数错误");
+            throw musicException;
+        }
+
+        return songServer.getSongRankListByPage(map);
+
+    }
+
+
 
     @RequestMapping("selectByName")
     public ResponseEntity<PageResult> selectByName(@RequestParam("name") String name,@RequestParam(value = "page",required=false,defaultValue = "1") int page,@RequestParam(value = "limit",required=false,defaultValue = "10") int limit){
