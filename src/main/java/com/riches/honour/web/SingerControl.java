@@ -10,6 +10,7 @@ package com.riches.honour.web;
 
 
 import com.riches.honour.bean.Singer;
+import com.riches.honour.bean.Song;
 import com.riches.honour.server.SingerServer;
 import com.riches.honour.util.PageParams;
 import com.riches.honour.util.PageResult;
@@ -77,6 +78,12 @@ public class SingerControl {
     public ResponseEntity<Singer> getOneSinger(@RequestBody Map<String,Integer> map){
 
         return singerServer.getOneSinger(map);
+    }
+
+    @RequestMapping("getTenSong")
+    public ResponseEntity<List<Song>> getTenSong(@RequestBody Map<String,Integer> map){
+
+        return singerServer.getTenSong(map);
     }
 
 

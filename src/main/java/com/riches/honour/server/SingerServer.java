@@ -5,8 +5,13 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
 import com.riches.honour.advice.MusicException;
+import com.riches.honour.bean.Album;
 import com.riches.honour.bean.Singer;
+import com.riches.honour.bean.Song;
+import com.riches.honour.mapper.AlbumMapper;
 import com.riches.honour.mapper.SingerMapper;
+import com.riches.honour.mapper.SongMapper;
+import com.riches.honour.util.GainDataKuwo;
 import com.riches.honour.util.PageParams;
 import com.riches.honour.util.PageResult;
 import com.riches.honour.util.ResultStatus;
@@ -18,10 +23,8 @@ import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.security.Key;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.text.BreakIterator;
+import java.util.*;
 
 
 /*
@@ -33,6 +36,12 @@ public class SingerServer {
 
     @Autowired
     SingerMapper singerMapper;
+
+    @Autowired
+    SongMapper songMapper;
+
+    @Autowired
+    AlbumMapper albumMapper;
 
     public ResponseEntity<PageResult<Singer>> getPageList(Map<String,String> map) {
          Integer page= Integer.valueOf(map.get("page"));
@@ -137,12 +146,59 @@ public class SingerServer {
 
     public ResponseEntity<Singer> getOneSinger(Map<String, Integer> map) {
             Integer id=map.get("sid");
+
+        Example example=new Example(Album.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sid",id).andEqualTo("isDeleted",1);
+        List<Album> albums=albumMapper.selectByExample(example);
+        int albumNum=albums.size();
+
+        List<Song> songs=new ArrayList<>();
+        for (Album i:albums) {
+            Example example2 = new Example(Song.class);
+            example2.createCriteria().andEqualTo("aid", i.getId()).andEqualTo("isDeleted", 1);
+            List<Song> songs1 = songMapper.selectByExample(example2);
+            songs.addAll(songs1);
+
+        }
+        int songNum=songs.size();
+
+
+
+
               Singer singer= singerMapper.selectByPrimaryKey(id);
+              singer.setYuliu(String.valueOf(songNum));
+              singer.setYuliu_2(String.valueOf(albumNum));
               if (singer==null){
                   throw new MusicException(404,"查询失败");
               }
 
 
         return ResponseEntity.ok(singer);
+    }
+
+    public ResponseEntity<List<Song>> getTenSong( Map<String,Integer> map) {
+        Integer singerId=map.get("sid");
+        Example example=new Example(Album.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sid",singerId).andEqualTo("isDeleted",1);
+               List<Album> albums=albumMapper.selectByExample(example);
+                List<Song> songs=new ArrayList<>();
+                   for (Album i:albums) {
+                       Example example2 = new Example(Song.class);
+                      example2.createCriteria().andEqualTo("aid", i.getId()).andEqualTo("isDeleted", 1);
+                       List<Song> songs1 = songMapper.selectByExample(example2);
+                       songs.addAll(songs1);
+                       if (songs.size() >= 10) {
+                           break;
+                       }
+                   }
+                   songs=songs.subList(0,10);
+               songs.forEach(i->{
+                  String songUrl= GainDataKuwo.getUrlByRid(i.getRid());
+                   i.setSongUrl(songUrl);
+               });
+
+        return ResponseEntity.ok(songs);
     }
 }
