@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -102,14 +99,30 @@ public class SongController {
         map.put("limit","9");
         map.put("page","1");
 
+        long t0 = System.currentTimeMillis();
+        
         map.put("key","hot");
         PageResult hotResult = doRankList(map);
+
+        long t1 = System.currentTimeMillis();
+
+        System.out.println("(t1-t0) = " + (t1-t0));
 
         map.put("key","song_long_time");
         PageResult resentResult = doRankList(map);
 
+        long t2 = System.currentTimeMillis();
+
+        System.out.println(t2-t1);
+
+        long t3 = System.currentTimeMillis();
+
         map.put("key","song_long_time,hot");
         PageResult resentHotResult = doRankList(map);
+
+        long t4 = System.currentTimeMillis();
+
+        System.out.println(t4-t3);
 
         List<PageResult> list = new ArrayList<>();
         list.add(hotResult);

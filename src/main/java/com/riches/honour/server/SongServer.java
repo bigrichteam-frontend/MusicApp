@@ -172,13 +172,19 @@ public class SongServer {
     public PageResult<Song> getSongListByPage(Map<String, String> map) {
 
         PageHelper.startPage(Integer.parseInt(map.get("page")), Integer.parseInt(map.get("limit")));
+        Integer aid = null;
+        if(map.get("aid")!=null){
+            aid = Integer.parseInt(map.get("aid"));
+        }
 
-        int aid = Integer.parseInt(map.get("aid"));
 
         Example example=new Example(Song.class);
         Example.Criteria criteria = example.createCriteria();
 
-        criteria.andEqualTo("isDeleted",1).andEqualTo("aid",aid);
+        criteria.andEqualTo("isDeleted",1);
+        if(aid!=null){
+            criteria.andEqualTo("aid",aid);
+        }
 
         //System.out.println("name = " + name);
         Page<Song> pageInfo = (Page<Song>) songMapper.selectByExample(example);
